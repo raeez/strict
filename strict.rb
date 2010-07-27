@@ -84,7 +84,7 @@ module Strict
     end
   end
 
-  def validate_map!(requirements, args)
+  def enforce_map!(requirements, args)
     enforce_primitive!(Hash, requirements)
     requirements.each do |param, type|
       if args.has_key? param
