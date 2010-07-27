@@ -1,4 +1,4 @@
-module TypeSystem
+module Strict
   def enforce_primitive!(type, data)
     raise "#{data} must be of type #{type}" unless (data.is_a? type and type.is_a? Class)
   end
@@ -58,6 +58,9 @@ module TypeSystem
         when :boolean
           enforce_weak_primitives!([TrueClass, FalseClass], data)
 
+        when :float
+          enforce_primitive!(Float, data)
+
         when :string_array
           enforce_primitive!(Array, data)
           data.each {|item| enforce_primitive!(String, item)}
@@ -71,7 +74,7 @@ module TypeSystem
           data.each {|item| enforce_primitive!(Float, item)}
 
         else
-          raise "undefined symbol-supertype encountered: #{type}"
+          raise "undefined symbol-supertype encountered: #{type.inspect}"
         end
       end
     end

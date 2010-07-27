@@ -1,1 +1,65 @@
-An exntendable rudimentary static type-system for ruby
+strict is a rudimentary static typesystem for ruby objects - it includes easy validation of individual ruby objects and Hash sets.
+
+For an example of validation:
+
+require 'strict'
+include Strict
+
+type_matrix = {
+  :choice => ["yes", "no"],
+  :height => :natural_number,
+  :width => :natural_number,
+  :broken => :boolean
+  }
+
+data = {
+  :choice => "yes",
+  :height => 20,
+  :width => 100,
+  :broken => false
+  }
+
+
+validate_map!(type_matrix, data)
+
+enforce!(:natural_number, 3)
+enforce!(:string, "onetwothree")
+enforce!(:float_array, [3.0, 3.0, 2.0])
+
+# all checks pass => data is valid according to specification
+
+Strict simply implements a basic extendable static type-checker over dynamic ruby types. For an example of validation with troublesome datasets:
+
+#enforce!(:string_array, ["one", "two", 3, "four"])
+#./strict.rb:3:in `enforce_primitive!': 3 must be of type String (RuntimeError)
+
+type_matrix = {
+  :fruit => [:apple, :orange, :banana],
+  :height => :natural_number,
+  :width => :float,
+  :broken => :boolean
+  }
+
+invalid_data = {
+  :fruit => :pear,
+  :height => -1,
+  :width => 100,
+  :broken => 1}
+
+
+validate_map!(type_matrix, invalid_data)
+#./strict.rb:27:in `enforce_weak_primitives!': 1 must be of one of the types of [TrueClass, FalseClass] (RuntimeError)
+#./strict.rb:3:in `enforce_primitive!': 10 must be of type Float (RuntimeError)
+#./strict.rb:38:in `enforce!': pear should take on a value within [:apple, :orange, :banana] (RuntimeError)
+#./strict.rb:53:in `enforce!': -1 must be > 0 (RuntimeError)
+
+A valid dataset for this type_matrix would be:
+
+valid_data = {
+  :fruit => :apple,
+  :height => 200,
+  :width => 100.011,
+  :broken => true
+  }
+
+validate_map!(type_matrix, invalid_data) # => all checks pass
