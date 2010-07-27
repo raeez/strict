@@ -3,21 +3,40 @@ strict is a rudimentary static typesystem for ruby objects - it includes easy va
 For an example of validation:
 
 require 'strict'
-include Strict
 
-type_matrix = {
-  :choice => ["yes", "no"],
-  :height => :natural_number,
-  :width => :natural_number,
-  :broken => :boolean
-  }
+class Rectangle
+  include Strict
 
-data = {
-  :choice => "yes",
-  :height => 20,
-  :width => 100,
-  :broken => false
-  }
+  def initialize(p)
+    
+    validate_map!({
+                :width => :natural_number,
+                :height => :natural_number,
+                :float => :boolean
+                }, p)
+
+    @width = p[:width]
+    @height = p[:height]
+    @float = p[:float]
+  end
+
+  def set_dimensions(dimensions)
+    validate_map!({
+                :width => :natural_number,
+                :height => :natural_number
+                }, dimensions) #checks for the presence + validity of all declared parameters
+
+    @height = dimensions[:height]
+    @width = dimensions[:width]
+  end
+
+  def scale_height(scale_coefficent)
+    enforce!(:float, scale_coefficent)
+    return scale_coefficent*@height #alays valid
+  end
+end
+  
+
 
 
 validate_map!(type_matrix, data)
@@ -63,3 +82,5 @@ valid_data = {
   }
 
 validate_map!(type_matrix, invalid_data) # => all checks pass
+
+Here is an example of 
