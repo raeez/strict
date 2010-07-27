@@ -43,7 +43,7 @@ module Strict
           enforce_primitive!(String, data)
           raise "#{data} can't be empty string" unless (data.size > 0)
 
-        when :hex_color
+        when :hex_color_string
           enforce!(:string, data)
           raise "#{data} must be six characters long" unless (data.size == 6)
           data.upcase.each_byte {|c| raise "#{data} must contain only hexadecimal characters" unless ((48 <= c  and c <= 57) or (65 <= c and c <= 70))}
@@ -72,6 +72,10 @@ module Strict
         when :float_array
           enforce_primitive!(Array, data)
           data.each {|item| enforce_primitive!(Float, item)}
+
+        when :integer_array
+          enforce_primitive!(Array, data)
+          data.each {|item| enforce_primitive!(Fixnum, item)}
 
         else
           raise "undefined symbol-supertype encountered: #{type.inspect}"

@@ -35,19 +35,18 @@ class Rectangle
     return scale_coefficent*@height #alays valid
   end
 end
-  
 
+Strict defines a number of 'super-types', currently which are:
+:natural_number
+:float
+:boolean
+:string_array
+:numeric_array
+:float_array
+:integer_array
+:hex_color_string
 
-
-validate_map!(type_matrix, data)
-
-enforce!(:natural_number, 3)
-enforce!(:string, "onetwothree")
-enforce!(:float_array, [3.0, 3.0, 2.0])
-
-# all checks pass => data is valid according to specification
-
-Strict simply implements a basic extendable static type-checker over dynamic ruby types. For an example of validation with troublesome datasets:
+Strict simply implements an extendable static type-checker over dynamic ruby objects. For an example of validation with troublesome datasets:
 
 #enforce!(:string_array, ["one", "two", 3, "four"])
 #./strict.rb:3:in `enforce_primitive!': 3 must be of type String (RuntimeError)
@@ -82,5 +81,3 @@ valid_data = {
   }
 
 validate_map!(type_matrix, invalid_data) # => all checks pass
-
-Here is an example of 
