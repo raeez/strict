@@ -55,6 +55,9 @@ module Strict
         when :integer
           enforce_primitive!(Fixnum, data)
 
+        when :numeric
+          enforce_primitive!(Numeric, data)
+
         when :boolean
           enforce_weak_primitives!([TrueClass, FalseClass], data)
 
