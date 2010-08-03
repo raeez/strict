@@ -2,13 +2,14 @@ require 'rubygems'
 require 'hoe'
 require 'lib/typestrict'
 
-Hoe.new('Strict', Strict::VERSION) do |p|
-  p.name = 'typestrict'
-  p.author = 'Raeez Lorgat'
-  p.description = 'Static typesystem for ruby'
-  p.email = 'raeez@mit.edu'
-  p.summary = 'Strict implements a static typesystem over dynamic ruby objects'
-  p.url = 'http://www.raeez.com/strict'
+Hoe.spec 'Strict' do
+  self.name = 'typestrict'
+  self.version = Strict::VERSION
+  self.author = 'Raeez Lorgat'
+  self.description = 'Static typesystem for ruby'
+  self.email = 'raeez@mit.edu'
+  self.summary = 'Strict implements a static typesystem over dynamic ruby objects'
+  self.url = 'http://www.raeez.com/strict'
 end
 
 desc "Release and publish documentation"
