@@ -1,3 +1,16 @@
+=== 0.0.3 / 2010-08-03
+
+* 1 major enhancement
+
+  * Introduced TypeError and verbose output - now displays list of errors caught and raises single Strict::TypeError
+
+=== 0.0.2 / 2010-08-03
+
+* 1 major enhancement
+
+  * Gemify
+
+
 === 0.0.1 / 2010-08-02
 
 * 1 major enhancement
