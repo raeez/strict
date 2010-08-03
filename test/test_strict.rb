@@ -1,5 +1,5 @@
 require "test/unit"
-require "strict"
+require "typestrict"
 
 class TestStrict < Test::Unit::TestCase
   def test_sanity

@@ -1,3 +1,10 @@
+=== 0.0.4 / 2010-08-03
+
+* 1 major enhancement
+
+  * Renamed package to typestrict
+
+
 === 0.0.3 / 2010-08-03
 
 * 1 major enhancement

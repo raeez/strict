@@ -1,9 +1,9 @@
 require 'rubygems'
 require 'hoe'
-require 'lib/strict'
+require 'lib/typestrict'
 
 Hoe.new('Strict', Strict::VERSION) do |p|
-  p.name = 'strict'
+  p.name = 'typestrict'
   p.author = 'Raeez Lorgat'
   p.description = 'Static typesystem for ruby'
   p.email = 'raeez@mit.edu'
