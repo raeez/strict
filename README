@@ -2,7 +2,7 @@ strict is a rudimentary static typesystem for ruby objects - it includes easy va
 
 For an example of validation:
 
-require 'strict'
+require 'typestrict'
 
 class Rectangle
   include Strict
