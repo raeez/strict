@@ -1,4 +1,6 @@
 module Strict
+  VERSION = '0.0.1'
+
   def enforce_primitive!(type, data)
     raise "#{data} must be of type #{type}" unless (data.is_a? type and type.is_a? Class)
   end

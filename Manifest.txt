@@ -1,0 +1,8 @@
+.autotest
+History.txt
+Manifest.txt
+README.txt
+Rakefile
+bin/strict
+lib/strict.rb
+test/test_strict.rb
