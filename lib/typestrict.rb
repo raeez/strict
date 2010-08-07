@@ -1,10 +1,10 @@
 module Strict
   VERSION = '0.0.4'
-
+  
   class TypeError < Exception
     attr :errors
     def initialize(error_list)
-      enforce!(:string_array, error_list, 'lib/strict')
+      enforce!(:string_array, error_list, 'lib/typestrict')
       @errors = error_list
     end
 
@@ -19,6 +19,7 @@ module Strict
 
   @@errors = []
   @@raise_exception = true
+  @@dynamic_handlers = {}
 
   def setmode_raise!
     @@errors = []
@@ -41,6 +42,14 @@ module Strict
     raise(t, t.inspect, caller) if @@errors.size > 0
   end
 
+  def register_supertype(supertype, handler)
+    enforce_primitive!(Symbol, supertype)
+    enforce_primitive!(Proc, handler)
+
+    @@dynamic_handlers[supertype] = handler
+    puts "registered a dynamic handler for supertype: #{supertype}"
+  end
+
   def header(context, data)
     "#{context}; #{data.class.inspect}::#{data.inspect}"
   end
@@ -51,8 +60,8 @@ module Strict
   end
 
   def enforce_strict_primitives!(types, data, context="Value")
-    enforce_primitive!(Array, types, 'lib/strict')
-    types.each {|type| enforce_primitive!(Object, type, 'lib/strict')}
+    enforce_primitive!(Array, types, 'lib/typestrict')
+    types.each {|type| enforce_primitive!(Object, type, 'lib/typestrict')}
     types.each do |type|
       enforce_primitive!(type, data, context)
     end
@@ -60,8 +69,8 @@ module Strict
   end
 
   def enforce_weak_primitives!(types, data, context="Value")
-    enforce_primitive!(Array, types, 'lib/strict')
-    types.each {|type| enforce_primitive!(Object, type, 'lib/strict')}
+    enforce_primitive!(Array, types, 'lib/typestrict')
+    types.each {|type| enforce_primitive!(Object, type, 'lib/typestrict')}
     
     match_found = false
     types.each do |type|
@@ -94,11 +103,6 @@ module Strict
           enforce_primitive!(String, data, context)
           catch_error "#{header(context, data)} can't be empty string" unless (data.size > 0)
 
-        when :hex_color
-          enforce!(:string, data, context)
-          catch_error "#{header(context, data)} must be six characters long" unless (data.size == 6)
-          data.upcase.each_byte {|c| catch_error "#{header(context, data)} must contain only hexadecimal characters" unless ((48 <= c  and c <= 57) or (65 <= c and c <= 70))}
-
         when :natural_number
           enforce_primitive!(Fixnum, data, context)
           catch_error "#{header(context, data)} must be > 0" unless (data > 0)
@@ -114,6 +118,13 @@ module Strict
 
         when :float
           enforce_primitive!(Float, data, context)
+
+        when :character
+          enforce!(:string, data, context)
+          catch_error "#{header(context, data)} must be a single character!" unless data.size == 1
+
+        when :procedure
+          enforce_primitive!(Proc, data, context)
 
         when :string_array
           enforce_primitive!(Array, data, context)
@@ -131,8 +142,17 @@ module Strict
           enforce_primitive!(Array, data, context)
           data.each {|item| enforce_primitive!(Fixnum, item, context)}
 
+        when :hex_color
+          enforce!(:string, data, context)
+          catch_error "#{header(context, data)} must be six characters long" unless (data.size == 6)
+          data.upcase.each_byte {|c| catch_error "#{header(context, data)} must contain only hexadecimal characters" unless ((48 <= c  and c <= 57) or (65 <= c and c <= 70))}
+
         else
-          catch_error "undefined symbol-supertype encountered: #{supertype.inspect}"
+          if @@dynamic_handlers.has_key? supertype
+            @@dynamic_handlers[supertype].call(data, context="Value")
+          else
+            catch_error "undefined symbol-supertype encountered: #{supertype.inspect}"
+          end
         end
       end
     end
@@ -140,8 +160,8 @@ module Strict
   end
 
   def enforce_map!(matrix, map)
-    enforce_primitive!(Hash, matrix, "lib/strict")
-    enforce_primitive!(Hash, map, "lib/strict")
+    enforce_primitive!(Hash, matrix, "lib/typestrict")
+    enforce_primitive!(Hash, map, "lib/typestrict")
 
     setmode_catch!
 
