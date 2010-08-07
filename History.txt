@@ -1,3 +1,10 @@
+=== 0.0.5 / 2010-08-07
+* 2 major enhancement
+
+  * Added :procedure supertype
+  * Added :character supertype
+  * Implemented Strict::register_supertype(supertype, handler) #supertype:symbol, handler:Proc
+
 === 0.0.4 / 2010-08-03
 
 * 1 major enhancement

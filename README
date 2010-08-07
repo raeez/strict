@@ -1,4 +1,4 @@
-strict is a rudimentary static typesystem for ruby objects - it includes easy validation of individual ruby objects and Hash sets.
+strict is a rudimentary static typesystem for ruby objects - it enables easy validation of individual ruby objects and Hash sets.
 
 For an example of validation:
 
@@ -12,12 +12,12 @@ class Rectangle
     validate_map!({
                 :width => :natural_number,
                 :height => :natural_number,
-                :float => :boolean
+                :color => :hex_color
                 }, p)
 
     @width = p[:width]
     @height = p[:height]
-    @float = p[:float]
+    @color = p[:color]
   end
 
   def set_dimensions(dimensions)
@@ -40,11 +40,35 @@ Strict defines a number of 'super-types', currently which are:
 :natural_number
 :float
 :boolean
+:integer
+:numeric
+:character
+:procedure
 :string_array
 :numeric_array
 :float_array
 :integer_array
-:hex_color_string
+:hex_color
+
+New supertypes may be registered with the register_supertype as follows:
+
+register_supertype(:char, proc {|data, context| enforce_primitive!(String, data); catch_error("#{data.inspect} must be a single character in length") unless (data.size == 1)})
+registered a dynamic handler for supertype: character
+=> nil
+
+irb(main)> enforce!(:char, "a")
+=> "a"
+irb(main)> enforce!(:char, "aa")
+Strict::TypeError: TypeError caught:
+"aa" must be a single character in length
+
+	from (irb):6
+	from ./str.rb:148:in `call'
+	from ./str.rb:148:in `enforce!'
+	from (irb):8
+
+irb(main):009:0> enforce!(:char, "x")
+=> "x"
 
 Strict simply implements an extendable static type-checker over dynamic ruby objects. For an example of validation with troublesome datasets:
 

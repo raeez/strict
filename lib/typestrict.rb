@@ -1,5 +1,5 @@
 module Strict
-  VERSION = '0.0.4'
+  VERSION = '0.0.5'
   
   class TypeError < Exception
     attr :errors

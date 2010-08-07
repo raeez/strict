@@ -35,7 +35,7 @@ none
 
 == INSTALL:
 
-sudo gem install strict
+sudo gem install typestrict
 
 == DEVELOPERS:
 
