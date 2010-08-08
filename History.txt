@@ -1,12 +1,12 @@
 === 0.0.7 / 2010-08-08
-* 2 major enhancement
+* 2 major enhancements
 
-  * Revamped implemantation and architecture
+  * Revamped implementation and architecture
   * Supertypes are now implemented using dynamic handlers + dynamic handlers
 
 
 === 0.0.5 / 2010-08-07
-* 2 major enhancement
+* 2 major enhancements
 
   * Added :procedure supertype
   * Added :character supertype
