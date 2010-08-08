@@ -105,9 +105,3 @@ valid_data = {
   }
 
 validate_map!(type_matrix, invalid_data) # => all checks pass
-
-TODO
-----
-Implement generic handler for super-types
-Performance analysis
-Implement low-level?
