@@ -1,3 +1,10 @@
+=== 0.0.7 / 2010-08-08
+* 2 major enhancement
+
+  * Revamped implemantation and architecture
+  * Supertypes are now implemented using dynamic handlers + dynamic handlers
+
+
 === 0.0.5 / 2010-08-07
 * 2 major enhancement
 
