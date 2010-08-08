@@ -1,5 +1,5 @@
 module Strict
-  VERSION = '0.0.5'
+  VERSION = '0.0.6'
   
   class TypeError < Exception
     attr :errors
@@ -27,7 +27,7 @@ module Strict
   end
 
   def setmode_catch!
-    @@errors = []
+    @@errors = [] unless @@errors.is_a? Array
     @@raise_exception = false
   end
 
@@ -43,8 +43,8 @@ module Strict
   end
 
   def register_supertype(supertype, handler)
-    enforce_primitive!(Symbol, supertype)
-    enforce_primitive!(Proc, handler)
+    enforce_primitive!(Symbol, supertype, "typestrict/register_supertype")
+    enforce_primitive!(Proc, handler, "typestrict/register_supertype")
 
     @@dynamic_handlers[supertype] = handler
     puts "registered a dynamic handler for supertype: #{supertype}"
@@ -71,7 +71,10 @@ module Strict
   def enforce_weak_primitives!(types, data, context="Value")
     enforce_primitive!(Array, types, 'lib/typestrict')
     types.each {|type| enforce_primitive!(Object, type, 'lib/typestrict')}
-    
+
+    raise_set_before  = @@raise_exception
+    setmode_catch!
+
     match_found = false
     types.each do |type|
       begin
@@ -82,6 +85,9 @@ module Strict
         next
       end
     end
+
+    setmode_raise! if raise_set_before
+
     catch_error "#{header(context, data)} must be of one of the types of #{types.inspect}" unless match_found
     return data
   end
