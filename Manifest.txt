@@ -5,4 +5,6 @@ README.txt
 Rakefile
 bin/typestrict
 lib/typestrict.rb
+lib/base.rb
+lib/supertypes.rb
 test/test_strict.rb

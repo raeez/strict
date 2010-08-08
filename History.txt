@@ -1,3 +1,8 @@
+=== 0.0.8 / 2010-08-08
+* 1 major enhancement
+
+  * Updated manifest + version bump
+
 === 0.0.7 / 2010-08-08
 * 2 major enhancements
 
