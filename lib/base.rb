@@ -110,6 +110,11 @@ module Strict
       return obj
     end
 
+    def enforce_exists!(key, map)
+      catch_error "map: missing required param: #{key.inspect}" unless map.has_key? key
+      map
+    end
+
     def enforce!(supertype, data, context="Value")
       enforce_non_nil!(data, context)
       

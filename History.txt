@@ -1,3 +1,9 @@
+=== 0.0.9 / 2010-08-08
+* 1 major enhancement
+
+  * implemented enforce_exists! for maps
+
+
 === 0.0.8 / 2010-08-08
 * 1 major enhancement
 
