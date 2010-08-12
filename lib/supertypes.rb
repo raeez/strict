@@ -51,6 +51,12 @@ module Strict
         enforce_primitive!(Proc, data, context)
       end
 
+      @@handlers[:hex_color] = proc do |data, context|
+        enforce!(:string, data, context)
+        catch_error "#{header(context, data)} must be six characters long" unless (data.size == 6)
+        data.upcase.each_byte {|c| catch_error "#{header(context, data)} must contain only hexadecimal characters" unless ((48 <= c  and c <= 57) or (65 <= c and c <= 70))}
+      end
+
       @@handlers[:string_array] = proc do |data, context|
         enforce_primitive!(Array, data, context)
         data.each {|item| enforce_primitive!(String, item, context)}
@@ -66,15 +72,14 @@ module Strict
         data.each {|item| enforce_primitive!(Float, item, context)}
       end
 
-      @@handlers[ :integer_array] = proc do |data, context|
+      @@handlers[:integer_array] = proc do |data, context|
         enforce_primitive!(Array, data, context)
         data.each {|item| enforce_primitive!(Fixnum, item, context)}
       end
 
-      @@handlers[:hex_color] = proc do |data, context|
-        enforce!(:string, data, context)
-        catch_error "#{header(context, data)} must be six characters long" unless (data.size == 6)
-        data.upcase.each_byte {|c| catch_error "#{header(context, data)} must contain only hexadecimal characters" unless ((48 <= c  and c <= 57) or (65 <= c and c <= 70))}
+      @@handlers[:hex_color_array] = proc do |data, context|
+        enforce_primitive!(Array, data)
+        data.each {|item| enforce!(:hex_color, item)}
       end
 
       @@handlers.each do |supertype, handler|
