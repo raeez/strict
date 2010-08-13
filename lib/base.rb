@@ -150,5 +150,21 @@ module Strict
       setmode_raise!
       return map
     end
+
+    def enforce_map_optional!(matrix, map)
+      enforce_primitive!(Hash, matrix, "lib/typestrict")
+      enforce_primitive!(Hash, map, "lib/typestrict")
+
+      setmode_catch!
+
+      matrix.each do |param, type|
+        if map.has_key? param
+          enforce!(type, map[param], "map[#{param.inspect}]")
+        end
+      end
+      raise_hell!
+      setmode_raise!
+      return map
+    end
   end
 end
