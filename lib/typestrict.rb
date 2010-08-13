@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), 'base')
 require File.join(File.dirname(__FILE__), 'supertypes')
 
 module Strict
-  VERSION = '0.0.10'
+  VERSION = '0.0.11'
   include Strict::Base
   include Strict::SuperTypes
 end
