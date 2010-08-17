@@ -1,3 +1,10 @@
+=== 0.0.12 / 2010-08-16
+* 3 major enhancements
+
+  * Introduced new supertypes: :uri, :uri_array, :procedure, :hash_map
+  * errors caught within a supertype's definition are now returned under setmode_catch! policy
+  * Introduced new policies: enforce_defaults!, enforce_map_optional
+
 === 0.0.9 / 2010-08-08
 * 1 major enhancement
 
@@ -14,7 +21,6 @@
 
   * Revamped implementation and architecture
   * Supertypes are now implemented using dynamic handlers + dynamic handlers
-
 
 === 0.0.5 / 2010-08-07
 * 2 major enhancements

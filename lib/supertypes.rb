@@ -51,11 +51,20 @@ module Strict
         enforce_primitive!(Proc, data, context)
       end
 
+      @@handlers[:hash_map] = proc do |data, context|
+        enforce_primitive!(Hash, data, context)
+      end
+
       @@handlers[:hex_color] = proc do |data, context|
         enforce!(:string, data, context)
         catch_error "#{header(context, data)} must be six characters long" unless (data.size == 6)
         data.upcase.each_byte {|c| catch_error "#{header(context, data)} must contain only hexadecimal characters" unless ((48 <= c  and c <= 57) or (65 <= c and c <= 70))}
       end
+
+      @@handlers[:uri] = proc do |data, context|
+        enforce!(:string, data, context)
+      end
+
 
       @@handlers[:string_array] = proc do |data, context|
         enforce_primitive!(Array, data, context)
@@ -78,8 +87,13 @@ module Strict
       end
 
       @@handlers[:hex_color_array] = proc do |data, context|
-        enforce_primitive!(Array, data)
-        data.each {|item| enforce!(:hex_color, item)}
+        enforce_primitive!(Array, data, context)
+        data.each {|item| enforce!(:hex_color, item, context)}
+      end
+
+      @@handlers[:uri_array] = proc do |data, context|
+        enforce_primitive!(Array, data, context)
+        data.each {|item| enforce!(:uri, item, context)}
       end
 
       @@handlers.each do |supertype, handler|
@@ -88,3 +102,6 @@ module Strict
     end
   end
 end
+
+# TODO implement uri correctly
+# make catch_error collect in base.rb for supertypes

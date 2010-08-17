@@ -1,7 +1,7 @@
 module Strict
   module Base
     
-    class StrictTypeError < Exception
+    class TypeError < Exception
       attr :errors
       def initialize(error_list)
         enforce_primitive!(Array, error_list, "lib/typestrict")
@@ -10,7 +10,7 @@ module Strict
       end
 
       def inspect
-        msg = "StrictTypeError#{@errors.size > 1 ? "s" : ""} caught:\n"
+        msg = "TypeError#{@errors.size > 1 ? "s" : ""} caught:\n"
         @errors.each do |e|
           msg += "#{e}\n"
         end
@@ -33,7 +33,7 @@ module Strict
 
     def catch_error error
       if @@raise_exception
-        t = StrictTypeError.new([error])
+        t = TypeError.new([error])
         raise(t, t.inspect, caller)
       else
         @@errors << error
@@ -42,7 +42,7 @@ module Strict
 
     def raise_hell!
       if @@errors.size > 0
-        t = StrictTypeError.new(@@errors)
+        t = TypeError.new(@@errors)
         setmode_raise!
         raise(t, t.inspect, caller)
       end
@@ -57,7 +57,7 @@ module Strict
     end
 
     def header(context, data)
-      "#{context}; #{data.class.inspect}::#{data.inspect}"
+      "#{context}> #{data.class.inspect}::#{data.inspect}"
     end
 
     def enforce_primitive!(type, data, context="Value")
@@ -124,7 +124,19 @@ module Strict
       else
         if supertype.is_a? Symbol #distinct supertype
           if @@dynamic_handlers.has_key? supertype
+
+            raise_set_before = @@raise_exception
+            previous_errors = @@errors
+            setmode_catch!
+
             @@dynamic_handlers[supertype].call(data, context)
+
+            if raise_set_before
+              raise_hell!
+              setmode_raise!
+            else
+              @@errors.concat(previous_errors)
+            end
           else
             catch_error "undefined symbol-supertype encountered: #{supertype.inspect}"
           end
@@ -165,6 +177,17 @@ module Strict
       raise_hell!
       setmode_raise!
       return map
+    end
+
+    def enforce_defaults!(matrix, map)
+      enforce_primitive!(Hash, matrix, "lib/typestrict")
+      enforce_primitive!(Hash, map, "lib/typestrict")
+
+      matrix.each do |param, default|
+        if !map.has_key? param
+          map[param] = default
+        end
+      end
     end
   end
 end
