@@ -6,7 +6,8 @@ module Strict
       def initialize(error_list)
         enforce_primitive!(Array, error_list, "lib/typestrict")
         error_list.each {|item| enforce_primitive!(String, item, "lib/typestrict")}
-        @errors = error_list
+
+        @errors = error_list & error_list
       end
 
       def inspect
@@ -163,6 +164,18 @@ module Strict
       return map
     end
 
+    def enforce_map_defaults!(matrix, map)
+      enforce_primitive!(Hash, matrix, "lib/typestrict")
+      enforce_primitive!(Hash, map, "lib/typestrict")
+
+      matrix.each do |param, default_value|
+        if !map.has_key? param
+          map[param] = default_value
+        end
+      end
+      return map
+    end
+
     def enforce_map_optional!(matrix, map)
       enforce_primitive!(Hash, matrix, "lib/typestrict")
       enforce_primitive!(Hash, map, "lib/typestrict")
@@ -177,17 +190,6 @@ module Strict
       raise_hell!
       setmode_raise!
       return map
-    end
-
-    def enforce_defaults!(matrix, map)
-      enforce_primitive!(Hash, matrix, "lib/typestrict")
-      enforce_primitive!(Hash, map, "lib/typestrict")
-
-      matrix.each do |param, default|
-        if !map.has_key? param
-          map[param] = default
-        end
-      end
     end
   end
 end
